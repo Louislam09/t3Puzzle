@@ -7,6 +7,7 @@ interface ScoreContextType {
   placeBlock: () => void;
   completeLine: () => void;
   resetGame: () => void;
+  resetCombo: () => void;
 }
 
 const ScoreContext = createContext<ScoreContextType | undefined>(undefined);
@@ -38,12 +39,18 @@ export const ScoreProvider: React.FC<{ children: React.ReactNode }> = ({
     updateState();
   }, [scorer, updateState]);
 
+  const resetCombo = useCallback(() => {
+    scorer.resetCombo();
+    updateState();
+  }, [scorer, updateState]);
+
   const value = {
     score,
     combo,
     placeBlock,
     completeLine,
     resetGame,
+    resetCombo,
   };
 
   return (

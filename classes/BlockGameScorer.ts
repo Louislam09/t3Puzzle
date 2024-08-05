@@ -4,13 +4,17 @@ class BlockGameScorer {
 
   // Award points for placing a block
   placeBlock(): void {
-    console.log("placeBlock");
     this.score += 1;
-    this.combo = 0; // Reset combo when placing a single block
+  }
+
+  resetCombo(): void {
+    console.log("combo to 0");
+    this.combo = 0;
   }
 
   // Award points for completing a line (row or column)
   completeLine(): void {
+    console.log("completeLine");
     const basePoints = 10;
     this.combo += 1;
     const comboMultiplier = this.getComboMultiplier();

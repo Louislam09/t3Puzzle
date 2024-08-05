@@ -1,17 +1,20 @@
 import { Text, View } from "@/components/Themed";
 import { useGameContext } from "@/contexts/GameProvider";
+import { useScore } from "@/contexts/ScoreProvider";
 import { useRouter } from "expo-router";
 import { TouchableOpacity } from "react-native";
 
 export default function Home() {
   const router = useRouter();
   const { initBoard, addRandomBlocks } = useGameContext() as any;
+  const { resetGame } = useScore();
 
   return (
     <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
       <Text>Home Screen</Text>
       <TouchableOpacity
         onPress={() => {
+          resetGame();
           initBoard();
           router.push("/game");
         }}

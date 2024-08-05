@@ -9,6 +9,7 @@ import {
   useState,
 } from "react";
 import { useWindowDimensions } from "react-native";
+import { useScore } from "./ScoreProvider";
 
 type NextBlockObject = {
   one: number[];
@@ -69,6 +70,7 @@ const GameProvider = ({ children }: any) => {
   const NUMBERS_ROWS = 9;
   const CELL_SIZE = (SCREEN_WIDTH - 20) / NUMBERS_ROWS;
   const blockShapes = createShapes(CELL_SIZE);
+  const { completeLine, resetCombo } = useScore();
 
   const [nextBlocksObject, setNextBlocksObject] = useState<NextBlockObject>({
     one: [],
@@ -114,24 +116,32 @@ const GameProvider = ({ children }: any) => {
       const newBoard = [...state.board];
       const emptyBlockValue = 0;
       const highlightColor = "#4444FF30";
+      let lineCompleted = false;
 
       for (let i = 0; i < newBoard.length; i++) {
         const colItems = newBoard[i];
         const rowItems = newBoard.map((row) => row[i]);
-
         const isColFilled = colItems.every((block) => block.value);
         const isRowFilled = rowItems.every((block) => block.value);
 
         if (isColFilled) {
+          lineCompleted = true;
+          completeLine();
           colItems.forEach((block) =>
             block.setColor(highlightColor, emptyBlockValue)
           );
         }
         if (isRowFilled) {
+          lineCompleted = true;
+          completeLine();
           rowItems.forEach((block) =>
             block.setColor(highlightColor, emptyBlockValue)
           );
         }
+      }
+
+      if (!lineCompleted) {
+        resetCombo();
       }
     };
 

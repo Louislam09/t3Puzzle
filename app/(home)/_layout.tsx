@@ -19,13 +19,13 @@ const StatusBarBackground = ({ children }: any) => {
 export default function HomeLayout() {
   return (
     <StatusBarBackground>
-      <GameProvider>
-        <ScoreProvider>
+      <ScoreProvider>
+        <GameProvider>
           <GradientBackground>
             <Slot />
           </GradientBackground>
-        </ScoreProvider>
-      </GameProvider>
+        </GameProvider>
+      </ScoreProvider>
     </StatusBarBackground>
   );
 }

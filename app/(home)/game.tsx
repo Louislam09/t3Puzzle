@@ -67,6 +67,38 @@ export default function Game() {
     return newBoard;
   };
 
+  // const checkAndUpdateBoard = () => {
+  //   const newBoard = [...board];
+  //   const emptyBlockValue = 0;
+  //   const highlightColor = "#4444FF30";
+  //   let lineCompleted = false;
+
+  //   for (let i = 0; i < newBoard.length; i++) {
+  //     const colItems = newBoard[i];
+  //     const rowItems = newBoard.map((row) => row[i]);
+  //     const isColFilled = colItems.every((block) => block.value);
+  //     const isRowFilled = rowItems.every((block) => block.value);
+  //     lineCompleted = isRowFilled || isColFilled;
+
+  //     if (isColFilled) {
+  //       scorer.completeLine();
+  //       colItems.forEach((block) =>
+  //         block.setColor(highlightColor, emptyBlockValue)
+  //       );
+  //     }
+  //     if (isRowFilled) {
+  //       scorer.completeLine();
+  //       rowItems.forEach((block) =>
+  //         block.setColor(highlightColor, emptyBlockValue)
+  //       );
+  //     }
+  //   }
+
+  //   if (!lineCompleted) {
+  //     scorer.resetCombo();
+  //   }
+  // };
+
   const handleBlockDrop = (
     blockShape: Block,
     position: { x: number; y: number },
@@ -78,6 +110,7 @@ export default function Game() {
       const newBoard = placeBlock(blockShape, row, col);
       setBoard(newBoard);
       removeFromQueue(blockIndex, blockShape.queue);
+      // checkAndUpdateBoard();
     } else {
       console.log("Block cannot be placed at the given position");
     }
