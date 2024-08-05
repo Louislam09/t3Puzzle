@@ -59,38 +59,33 @@ const BlockQueue: React.FC<BlockQueueProps> = ({ onDragStart, onDrop }) => {
       {queueBlocks[0] ? (
         <View style={styles.cell}>{queueBlocks[0].getElement()}</View>
       ) : (
-        <View style={styles.cell} />
+        <View style={{}} />
       )}
-      {/* {queueBlocksTwo[0] ? (
-        <View style={[styles.cell]}>{queueBlocksTwo[0].getElement()}</View>
+      {queueBlocksTwo[0] ? (
+        <View style={[styles.cell, { marginHorizontal: cellSize }]}>
+          {queueBlocksTwo[0].getElement()}
+        </View>
       ) : (
-        <View style={styles.cell} />
+        <View style={{}} />
       )}
       {queueBlocksThree[0] ? (
         <View style={styles.cell}>{queueBlocksThree[0].getElement()}</View>
       ) : (
-        <View style={styles.cell} />
-      )} */}
+        <View style={{}} />
+      )}
     </View>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
-    backgroundColor: "#000033",
-    borderWidth: 2,
-    borderColor: "#4444FF90",
-    width: "100%",
-  },
   row: {
     width: "100%",
     flexDirection: "row",
-    borderColor: "#2a6f3c",
-    borderWidth: 1,
+    justifyContent: "center",
+    alignItems: "center",
   },
   cell: {
-    borderWidth: 1,
-    borderColor: "#4444FF90",
+    backgroundColor: "transparent",
   },
 });
 

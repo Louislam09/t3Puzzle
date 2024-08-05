@@ -45,34 +45,35 @@ export const generateNextBlocks = (): number[] => {
 };
 
 export const getColor = (value: number): string => {
-  const colors = [
-    "#2C3E50", // Deep blue-grey
-    "#E74C3C", // Bright red
-    "#3498DB", // Sky blue
-    "#F1C40F", // Sunflower yellow
-    "#1ABC9C", // Turquoise
-    "#9B59B6", // Amethyst purple
-    "#27AE60", // Nephritis green
-    "#F39C12", // Orange
-    "#16A085", // Green sea
-    "#D35400", // Pumpkin orange
-    "#34495E", // Wet asphalt blue
-    "#2ECC71", // Emerald green
-  ];
   // const colors = [
-  //   "#E63946",
-  //   "#A8DADC",
-  //   "#1D3557",
-  //   "#F4A261",
-  //   "#2A9D8F",
-  //   "#E9C46A",
-  //   "#F3722C",
-  //   "#263111",
-  //   "#2A9D8F",
-  //   "#E9C46A",
-  //   "#F3722C",
-  //   "#FFFFFF",
+  //   "#2C3E50", // Deep blue-grey
+  //   "#E74C3C", // Bright red
+  //   "#3498DB", // Sky blue
+  //   "#F1C40F", // Sunflower yellow
+  //   "#1ABC9C", // Turquoise
+  //   "#9B59B6", // Amethyst purple
+  //   "#27AE60", // Nephritis green
+  //   "#F39C12", // Orange
+  //   "#16A085", // Green sea
+  //   "#D35400", // Pumpkin orange
+  //   "#34495E", // Wet asphalt blue
+  //   "#2ECC71", // Emerald green
   // ];
+  const colors = [
+    "#FF5733", // Fiery Red
+    "#33FF57", // Bright Green
+    "#3357FF", // Vivid Blue
+    "#FF33A8", // Hot Pink
+    "#FFD700", // Golden Yellow
+    "#33FFF5", // Cyan
+    "#FF8C33", // Orange
+    "#8D33FF", // Electric Purple
+    "#33FFDD", // Aqua
+    "#FF3333", // Red
+    "#33FF33", // Lime
+    "#FFFFFF", // White
+  ];
+
   return colors[value] || "#FFFFFF"; // Blanco por defecto
 };
 

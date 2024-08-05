@@ -142,9 +142,37 @@ const GameProvider = ({ children }: any) => {
     });
   }, []);
 
-  // useEffect(() => {
-  //   addRandomBlocks(1);
-  // }, []);
+  useEffect(() => {
+    // check row/col filled
+    const newBoard = [...state.board];
+    let emptyBlockValue = 0;
+    for (let colIndex = 0; colIndex < newBoard.length; colIndex++) {
+      const colItems = newBoard[colIndex];
+      const rowItems = [];
+      for (let rowIndex = 0; rowIndex < newBoard[colIndex].length; rowIndex++) {
+        const rowItem = newBoard[rowIndex][colIndex];
+        rowItems.push(rowItem);
+      }
+      const isColFilled = colItems.every((block) => block.value);
+      const isRowFilled = rowItems.every((block) => block.value);
+
+      if (isColFilled) {
+        for (let r = 0; r < colItems.length; r++) {
+          const current = colItems[r];
+          const color = "#4444FF30";
+          current.setColor(color, emptyBlockValue);
+        }
+      }
+      if (isRowFilled) {
+        for (let r = 0; r < rowItems.length; r++) {
+          const current = rowItems[r];
+          const color = "#4444FF30";
+          current.setColor(color, emptyBlockValue);
+        }
+      }
+    }
+    // setBoard(newBoard);
+  }, [state.board]);
 
   useEffect(() => {
     const { one, three, two } = nextBlocksObject;

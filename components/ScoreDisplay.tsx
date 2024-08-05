@@ -1,7 +1,6 @@
 import React from "react";
-import { View, StyleSheet } from "react-native";
+import { StyleSheet, View } from "react-native";
 import { Text } from "./Themed";
-import { useGameContext } from "@/contexts/GameProvider";
 
 interface ScoreDisplayProps {
   score: number;
@@ -16,9 +15,10 @@ const ScoreDisplay: React.FC<ScoreDisplayProps> = ({
 }) => {
   return (
     <View style={styles.container}>
-      <Text style={styles.text}>Score: {score}</Text>
-      <Text style={styles.text}>High Score: {highScore}</Text>
-      <Text style={styles.text}>Remaining Block: {nextBlocks.length}</Text>
+      <View style={styles.score}>
+        <Text style={{ fontWeight: "bold" }}>SCORE</Text>
+        <Text style={styles.text}>{`${score < 10 ? "0" + score : score}`}</Text>
+      </View>
     </View>
   );
 };
@@ -26,15 +26,19 @@ const ScoreDisplay: React.FC<ScoreDisplayProps> = ({
 const styles = StyleSheet.create({
   container: {
     padding: 10,
-    backgroundColor: "#000033",
-    borderWidth: 2,
-    borderColor: "#4444FF90",
     width: "100%",
     marginBottom: 10,
   },
+  score: {
+    display: "flex",
+    textAlign: "center",
+    justifyContent: "center",
+    alignItems: "center",
+  },
   text: {
     color: "#FFFFFF",
-    fontSize: 18,
+    fontSize: 40,
+    fontWeight: "bold",
   },
 });
 

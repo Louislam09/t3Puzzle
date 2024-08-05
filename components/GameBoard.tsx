@@ -3,6 +3,7 @@ import { useGameContext } from "@/contexts/GameProvider";
 import React, { useRef } from "react";
 import { StyleSheet, View } from "react-native";
 import BlockQueue from "./BlockQueue";
+import Colors from "@/constants/Colors";
 
 interface GameBoardProps {
   nextBlocks: number[];
@@ -28,11 +29,6 @@ const GameBoard: React.FC<GameBoardProps> = ({
           ))}
         </View>
       ))}
-      {/* <BlockQueue
-        nextBlocks={nextBlocks}
-        onDragStart={onDragStart}
-        onDrop={onDrop}
-      /> */}
     </View>
   );
 };
@@ -41,20 +37,9 @@ const styles = StyleSheet.create({
   blockContainer: {
     display: "flex",
     flexDirection: "row",
-  },
-  container: {
-    backgroundColor: "#000033",
+    backgroundColor: "#ffffff59",
     borderWidth: 2,
-    borderColor: "#4444FF90",
-  },
-  row: {
-    flexDirection: "row",
-  },
-  cell: {
-    borderWidth: 1,
-    borderColor: "#4444FF30",
-    alignItems: "center",
-    justifyContent: "center",
+    borderColor: "#6295e669",
   },
 });
 

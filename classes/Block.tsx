@@ -46,16 +46,16 @@ class Block {
     this.element = <></>;
   }
 
-  setColor(color: string) {
+  setColor(color: string, value: number = 1) {
     this.color = color;
     this.element = this.createBlock();
-    this.value = 1;
+    this.value = value;
   }
 
   private createBlock(): JSX.Element {
     const style: ViewStyle = {
       borderWidth: 1,
-      borderColor: "#4444FF30",
+      borderColor: "#ffffff59",
       alignItems: "center",
       justifyContent: "center",
       backgroundColor: this.color,

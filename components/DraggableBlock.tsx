@@ -16,8 +16,9 @@ const DraggableBlock: React.FC<DraggableBlockProps> = ({
   onDrop,
   blockIndex,
 }) => {
+  const defaultScale = 0.7;
   const pan: any = useRef(new Animated.ValueXY()).current;
-  const scale = useRef(new Animated.Value(1)).current;
+  const scale = useRef(new Animated.Value(defaultScale)).current;
   const { cellSize, setCurrentBlock } = useGameContext();
   const elementRef = useRef<View>(null);
 
@@ -31,7 +32,7 @@ const DraggableBlock: React.FC<DraggableBlockProps> = ({
 
   const endAnimation = () => {
     Animated.spring(scale, {
-      toValue: 1,
+      toValue: defaultScale,
       useNativeDriver: false,
     }).start();
   };
@@ -50,17 +51,17 @@ const DraggableBlock: React.FC<DraggableBlockProps> = ({
       onPanResponderGrant: () => {
         pan.setOffset({
           x: pan.x?._value,
-          y: pan.y?._value,
+          y: pan.y?._value - 100,
         });
         startAnimation();
         onDragStart(blockShape);
       },
       onPanResponderMove: (_, gestureState) => {
-        const snappedY = Math.round(gestureState.dy / cellSize) * cellSize;
-        const snappedX = Math.round(gestureState.dx / cellSize) * cellSize;
+        // const snappedY = Math.round(gestureState.dy / cellSize) * cellSize;
+        // const snappedX = Math.round(gestureState.dx / cellSize) * cellSize;
         Animated.event([null, { dx: pan.x, dy: pan.y }], {
           useNativeDriver: false,
-        })(_, { dx: snappedX, dy: snappedY });
+        })(_, { dx: gestureState.dx, dy: gestureState.dy });
       },
       onPanResponderRelease: (_, gestureState) => {
         pan.flattenOffset();
@@ -132,10 +133,7 @@ const styles = StyleSheet.create({
   row: {
     flexDirection: "row",
   },
-  cell: {
-    borderWidth: 1,
-    borderColor: "#4444FF50",
-  },
+  cell: {},
 });
 
 export default DraggableBlock;

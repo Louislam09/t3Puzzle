@@ -7,6 +7,7 @@ import { BLOCKS, BlockType, getColor } from "@/constants/GameProps";
 import { useGameContext } from "@/contexts/GameProvider";
 import React, { useCallback, useEffect, useState } from "react";
 import { StyleSheet, View } from "react-native";
+import Colors from "@/constants/Colors";
 
 export default function Game() {
   const [score, setScore] = useState<number>(0);
@@ -47,8 +48,6 @@ export default function Game() {
         if (template[blockRow][blockCol] === 1) {
           const boardRow = row + blockRow;
           const boardCol = col + blockCol;
-          // console.log({ col, row, boardRow, boardCol });
-
           if (
             boardRow < 0 ||
             boardRow >= board.length ||
@@ -127,8 +126,7 @@ export default function Game() {
 
 const styles = StyleSheet.create({
   container: {
-    // flex: 1,
-    backgroundColor: "#000",
+    flex: 1,
     alignItems: "center",
     justifyContent: "center",
     width: "100%",
@@ -136,7 +134,7 @@ const styles = StyleSheet.create({
   gameArea: {
     width: "100%",
     alignItems: "center",
-    // gap: 15,
+    gap: 15,
     justifyContent: "space-between",
   },
 });

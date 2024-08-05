@@ -13,7 +13,6 @@ export default function Home() {
       <TouchableOpacity
         onPress={() => {
           initBoard();
-          // addRandomBlocks(1);
           router.push("/game");
         }}
         style={{ backgroundColor: "red", padding: 10, marginVertical: 10 }}
