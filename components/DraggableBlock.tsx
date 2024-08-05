@@ -1,43 +1,46 @@
-import React, { useRef } from "react";
-import { View, StyleSheet, PanResponder, Animated } from "react-native";
-import { BLOCKS } from "@/constants/GameProps";
+import Block from "@/classes/Block";
 import { useGameContext } from "@/contexts/GameProvider";
+import React, { useRef } from "react";
+import { Animated, PanResponder, StyleSheet, View } from "react-native";
 
 interface DraggableBlockProps {
-  blockType: number;
+  blockShape: Block;
   onDragStart: any;
-  onDrop: (
-    blockType: number,
-    position: {
-      x: number;
-      y: number;
-    }
-  ) => void;
+  onDrop: any;
+  blockIndex: any;
 }
 
 const DraggableBlock: React.FC<DraggableBlockProps> = ({
-  blockType,
+  blockShape,
   onDragStart,
   onDrop,
+  blockIndex,
 }) => {
-  const pan = useRef(new Animated.ValueXY()).current;
-  const scale = useRef(new Animated.Value(0.8)).current;
-  const { cellSize } = useGameContext();
+  const pan: any = useRef(new Animated.ValueXY()).current;
+  const scale = useRef(new Animated.Value(1)).current;
+  const { cellSize, setCurrentBlock } = useGameContext();
   const elementRef = useRef<View>(null);
-  const GRID_SIZE = 43; // Define the grid size
 
   const startAnimation = () => {
     pan.setValue({ x: 0, y: 0 });
     Animated.spring(scale, {
-      toValue: 1,
-      useNativeDriver: true,
+      toValue: 1.1,
+      useNativeDriver: false,
     }).start();
   };
 
   const endAnimation = () => {
     Animated.spring(scale, {
-      toValue: 0.8,
-      useNativeDriver: true,
+      toValue: 1,
+      useNativeDriver: false,
+    }).start();
+  };
+
+  const initPos = () => {
+    Animated.timing(pan, {
+      toValue: { ...pan, x: 0, y: 0 },
+      duration: 100,
+      useNativeDriver: false,
     }).start();
   };
 
@@ -46,44 +49,52 @@ const DraggableBlock: React.FC<DraggableBlockProps> = ({
       onStartShouldSetPanResponder: () => true,
       onPanResponderGrant: () => {
         pan.setOffset({
-          // @ts-ignore
-          x: pan.x._value,
-          // @ts-ignore
-          y: pan.y._value,
-          // y: pan.y._value - 100,
+          x: pan.x?._value,
+          y: pan.y?._value,
         });
         startAnimation();
-        onDragStart(blockType);
+        onDragStart(blockShape);
       },
-      onPanResponderMove: Animated.event([null, { dx: pan.x, dy: pan.y }], {
-        useNativeDriver: false,
-      }),
-      onPanResponderRelease: () => {
+      onPanResponderMove: (_, gestureState) => {
+        const snappedY = Math.round(gestureState.dy / cellSize) * cellSize;
+        const snappedX = Math.round(gestureState.dx / cellSize) * cellSize;
+        Animated.event([null, { dx: pan.x, dy: pan.y }], {
+          useNativeDriver: false,
+        })(_, { dx: snappedX, dy: snappedY });
+      },
+      onPanResponderRelease: (_, gestureState) => {
         pan.flattenOffset();
-        console.log("pan", pan);
+        const snappedX = Math.round(pan.x._value / cellSize) * cellSize;
+        const snappedY = Math.round(pan.y._value / cellSize) * cellSize;
+
+        Animated.spring(pan, {
+          toValue: { x: snappedX, y: snappedY },
+          useNativeDriver: false,
+        }).start();
+
         elementRef.current?.measure((fx, fy, width, height, px, py) => {
-          // fx, fy are relative to the parent
-          // px, py are relative to the screen
-          console.log("DraggableBlock", { fx, fy, px, py, width, height });
+          const canMove = onDrop(blockShape, { x: px, y: py }, blockIndex);
+          if (!canMove) {
+            initPos();
+          }
         });
-        // @ts-ignore
-        onDrop(blockType, { x: pan.x._value, y: pan.y._value });
         endAnimation();
       },
     })
   ).current;
 
   const renderBlockShape = () => {
-    const blockShape = BLOCKS[blockType];
-    return blockShape.map((row, rowIndex) => (
-      <View key={rowIndex} style={styles.row}>
-        {row.map((cell, cellIndex) => (
+    const template = blockShape.template;
+    const color = blockShape.color;
+    return template.map((row, rowIndex) => (
+      <View key={rowIndex} style={[styles.row, {}]}>
+        {row.map((cell: any, cellIndex: any) => (
           <View
             key={cellIndex}
             style={[
               styles.cell,
               {
-                backgroundColor: cell ? getColor(blockType + 1) : "transparent",
+                backgroundColor: cell ? color : "transparent",
                 borderWidth: cell ? 1 : 0,
                 width: cellSize,
                 height: cellSize,
@@ -114,20 +125,6 @@ const DraggableBlock: React.FC<DraggableBlockProps> = ({
   );
 };
 
-const getColor = (value: number): string => {
-  const colors = [
-    "#E63946", // Rojo (Carmín)
-    "#A8DADC", // Azul Claro (Aguamarina)
-    "#1D3557", // Azul Oscuro (Prusia)
-    "#F4A261", // Naranja (Melón)
-    "#2A9D8F", // Verde (Jade)
-    "#E9C46A", // Amarillo (Maíz)
-    "#F3722C", // Naranja (Zanahoria)
-    "#264653", // Azul Muy Oscuro (Pizarra)
-  ];
-  return colors[value - 1] || "#FFFFFF"; // Blanco por defecto
-};
-
 const styles = StyleSheet.create({
   blockContainer: {
     flexDirection: "column",
@@ -136,8 +133,6 @@ const styles = StyleSheet.create({
     flexDirection: "row",
   },
   cell: {
-    // width: BLOCK_SIZE,
-    // height: BLOCK_SIZE,
     borderWidth: 1,
     borderColor: "#4444FF50",
   },

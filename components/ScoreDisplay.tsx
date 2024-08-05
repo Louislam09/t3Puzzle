@@ -1,18 +1,24 @@
 import React from "react";
 import { View, StyleSheet } from "react-native";
 import { Text } from "./Themed";
+import { useGameContext } from "@/contexts/GameProvider";
 
 interface ScoreDisplayProps {
   score: number;
   highScore: number;
+  nextBlocks: any[];
 }
 
-const ScoreDisplay: React.FC<ScoreDisplayProps> = ({ score, highScore }) => {
+const ScoreDisplay: React.FC<ScoreDisplayProps> = ({
+  score,
+  highScore,
+  nextBlocks,
+}) => {
   return (
     <View style={styles.container}>
-      <Text>ScoreDisplay</Text>
-      {/* <Text style={styles.text}>Score: {score}</Text>
-      <Text style={styles.text}>High Score: {highScore}</Text> */}
+      <Text style={styles.text}>Score: {score}</Text>
+      <Text style={styles.text}>High Score: {highScore}</Text>
+      <Text style={styles.text}>Remaining Block: {nextBlocks.length}</Text>
     </View>
   );
 };

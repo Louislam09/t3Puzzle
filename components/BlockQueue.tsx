@@ -1,53 +1,96 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { View, StyleSheet } from "react-native";
 import DraggableBlock from "./DraggableBlock";
-import { BLOCK_SIZE } from "@/constants/GameProps";
-import { useGameContext } from "@/contexts/GameProvider";
+import { PropName, useGameContext } from "@/contexts/GameProvider";
+import Block from "@/classes/Block";
 
 interface BlockQueueProps {
   nextBlocks: number[];
   onDragStart: (blockType: number) => void;
-  onDrop: (
-    blockType: number,
-    position: {
-      x: number;
-      y: number;
-    }
-  ) => void;
+  onDrop: any;
 }
 
-const rows = 5;
+const BlockQueue: React.FC<BlockQueueProps> = ({ onDragStart, onDrop }) => {
+  const { cellSize, blockShapes, nextBlocksObject } = useGameContext();
+  const {
+    one: blocksOne,
+    two: blocksTwo,
+    three: blocksThree,
+  } = nextBlocksObject;
 
-const BlockQueue: React.FC<BlockQueueProps> = ({
-  nextBlocks,
-  onDragStart,
-  onDrop,
-}) => {
-  const { rowNumber, cellSize } = useGameContext();
-  return (
-    <View style={[styles.container, { height: cellSize * 4 }]}>
-      {nextBlocks?.map((blockType, index) => (
+  const [queueBlocks, setQueueBlocks] = useState<Block[]>([]);
+  const [queueBlocksTwo, setQueueBlocksTwo] = useState<Block[]>([]);
+  const [queueBlocksThree, setQueueBlocksThree] = useState<Block[]>([]);
+
+  const createBlocks = (blocks: number[], propName: PropName) => {
+    return blocks.map((block, index) => {
+      const blockShape = blockShapes[block];
+      const blockColor = blockShape.color;
+      blockShape.color = blockColor;
+      blockShape.queue = propName;
+      const element = (
         <DraggableBlock
           key={index}
-          blockType={blockType}
+          blockIndex={index}
+          blockShape={blockShape}
           onDragStart={onDragStart}
           onDrop={onDrop}
         />
-      ))}
+      );
+      blockShape.setElement(block, element);
+      return blockShape;
+    });
+  };
+
+  useEffect(() => {
+    setQueueBlocks(createBlocks(blocksOne, PropName.one));
+  }, [blocksOne]);
+
+  useEffect(() => {
+    setQueueBlocksTwo(createBlocks(blocksTwo, PropName.two));
+  }, [blocksTwo]);
+
+  useEffect(() => {
+    setQueueBlocksThree(createBlocks(blocksThree, PropName.three));
+  }, [blocksThree]);
+
+  return (
+    <View style={[styles.row, { height: cellSize * 4 }]}>
+      {queueBlocks[0] ? (
+        <View style={styles.cell}>{queueBlocks[0].getElement()}</View>
+      ) : (
+        <View style={styles.cell} />
+      )}
+      {/* {queueBlocksTwo[0] ? (
+        <View style={[styles.cell]}>{queueBlocksTwo[0].getElement()}</View>
+      ) : (
+        <View style={styles.cell} />
+      )}
+      {queueBlocksThree[0] ? (
+        <View style={styles.cell}>{queueBlocksThree[0].getElement()}</View>
+      ) : (
+        <View style={styles.cell} />
+      )} */}
     </View>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    flexDirection: "row",
     backgroundColor: "#000033",
     borderWidth: 2,
     borderColor: "#4444FF90",
-    justifyContent: "space-around",
-    alignItems: "center",
     width: "100%",
-    // height: rows * BLOCK_SIZE,
+  },
+  row: {
+    width: "100%",
+    flexDirection: "row",
+    borderColor: "#2a6f3c",
+    borderWidth: 1,
+  },
+  cell: {
+    borderWidth: 1,
+    borderColor: "#4444FF90",
   },
 });
 

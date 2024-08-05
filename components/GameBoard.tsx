@@ -1,85 +1,47 @@
-import { BLOCK_SIZE, BOARD_ROWS_COLS } from "@/constants/GameProps";
-import React, { useEffect, useRef, useState } from "react";
-import {
-  View,
-  StyleSheet,
-  GestureResponderEvent,
-  TouchableOpacity,
-} from "react-native";
-import { Text } from "./Themed";
+import { BlockType } from "@/constants/GameProps";
 import { useGameContext } from "@/contexts/GameProvider";
+import React, { useRef } from "react";
+import { StyleSheet, View } from "react-native";
+import BlockQueue from "./BlockQueue";
 
 interface GameBoardProps {
-  board: number[][];
+  nextBlocks: number[];
+  onDragStart: any;
+  onDrop: any;
 }
 
-const RenderCell = ({ rowIndex, cellIndex, cellSize, cell, board }: any) => {
-  const elementRef = useRef<TouchableOpacity>(null);
-  const [position, setPosition] = useState({ x: 0, y: 0 });
-
-  const handlePress = () => {
-    elementRef.current?.measure((fx, fy, width, height, px, py) => {
-      // fx, fy are relative to the parent
-      // px, py are relative to the screen
-      console.log("RenderCell", { fx, fy, px, py, width, height });
-      setPosition({ x: px, y: py });
-    });
-  };
-
-  return (
-    <TouchableOpacity ref={elementRef} onPress={handlePress}>
-      <View
-        style={[
-          styles.cell,
-          {
-            backgroundColor: cell ? getColor(cell) : "transparent",
-            width: cellSize,
-            height: cellSize,
-          },
-        ]}
-      >
-        {/* {board.length - 1 === rowIndex && (
-          <Text>{`${rowIndex} , ${cellIndex}`}</Text>
-        )} */}
-      </View>
-    </TouchableOpacity>
-  );
-};
-
-const GameBoard: React.FC<GameBoardProps> = ({ board }) => {
+const GameBoard: React.FC<GameBoardProps> = ({
+  nextBlocks,
+  onDragStart,
+  onDrop,
+}) => {
   const boardRef = useRef<View>(null);
-  const { cellSize, boardWidth } = useGameContext();
+  const { boardWidth } = useGameContext();
+  const { board } = useGameContext();
 
   return (
-    <View ref={boardRef} style={[styles.container, { width: boardWidth }]}>
-      {board.map((row, rowIndex) => (
-        <View key={rowIndex} style={styles.row}>
+    <View ref={boardRef} style={[styles.blockContainer, { width: boardWidth }]}>
+      {board?.map((row, rowIndex) => (
+        <View key={rowIndex}>
           {row.map((cell, cellIndex) => (
-            <RenderCell
-              key={`${rowIndex}-${cellIndex}`}
-              {...{ rowIndex, cellIndex, cellSize, cell, board }}
-            />
+            <View key={cellIndex}>{cell?.getElement()}</View>
           ))}
         </View>
       ))}
+      {/* <BlockQueue
+        nextBlocks={nextBlocks}
+        onDragStart={onDragStart}
+        onDrop={onDrop}
+      /> */}
     </View>
   );
 };
 
-const getColor = (value: number): string => {
-  const colors = [
-    "#FF0000",
-    "#00FF00",
-    "#0000FF",
-    "#FFFF00",
-    "#FF00FF",
-    "#00FFFF",
-    "#FFA500",
-  ];
-  return colors[value - 1] || "#FFFFFF";
-};
-
 const styles = StyleSheet.create({
+  blockContainer: {
+    display: "flex",
+    flexDirection: "row",
+  },
   container: {
     backgroundColor: "#000033",
     borderWidth: 2,
