@@ -1,6 +1,6 @@
 import Block from "@/classes/Block";
 import { useGameContext } from "@/contexts/GameProvider";
-import React, { useRef } from "react";
+import React, { useEffect, useRef } from "react";
 import { Animated, PanResponder, StyleSheet, View } from "react-native";
 
 interface DraggableBlockProps {
@@ -16,10 +16,11 @@ const DraggableBlock: React.FC<DraggableBlockProps> = ({
   onDrop,
   blockIndex,
 }) => {
-  const defaultScale = 0.7;
+  const defaultScale = 0.6;
   const pan: any = useRef(new Animated.ValueXY()).current;
-  const scale = useRef(new Animated.Value(defaultScale)).current;
-  const { cellSize, setCurrentBlock } = useGameContext();
+  const scale = useRef(new Animated.Value(0)).current;
+  const opacity = useRef(new Animated.Value(0)).current;
+  const { cellSize } = useGameContext();
   const elementRef = useRef<View>(null);
 
   const startAnimation = () => {
@@ -40,10 +41,24 @@ const DraggableBlock: React.FC<DraggableBlockProps> = ({
   const initPos = () => {
     Animated.timing(pan, {
       toValue: { ...pan, x: 0, y: 0 },
-      duration: 100,
+      duration: 200,
+      useNativeDriver: false,
+    }).start();
+    Animated.timing(scale, {
+      toValue: defaultScale,
+      duration: 500,
+      useNativeDriver: false,
+    }).start();
+    Animated.timing(opacity, {
+      toValue: 1,
+      duration: 500,
       useNativeDriver: false,
     }).start();
   };
+
+  useEffect(() => {
+    initPos();
+  }, []);
 
   const panResponder = useRef(
     PanResponder.create({
@@ -99,6 +114,7 @@ const DraggableBlock: React.FC<DraggableBlockProps> = ({
                 borderWidth: cell ? 1 : 0,
                 width: cellSize,
                 height: cellSize,
+                borderColor: "#ffffff99",
               },
             ]}
           />
@@ -111,6 +127,7 @@ const DraggableBlock: React.FC<DraggableBlockProps> = ({
     <Animated.View
       ref={elementRef}
       style={[
+        { opacity },
         {
           transform: [
             { translateX: pan.x },

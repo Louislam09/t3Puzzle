@@ -1,12 +1,5 @@
 import Block from "@/classes/Block";
-import { View } from "@/components/Themed";
-import {
-  BLOCKS,
-  BlockType,
-  createEmptyBoard,
-  generateNextBlocks,
-  getColor,
-} from "@/constants/GameProps";
+import { BLOCKS, createEmptyBoard, getColor } from "@/constants/GameProps";
 import {
   createContext,
   useCallback,
@@ -35,14 +28,9 @@ const initState = {
   rowNumber: 0,
   currentBlock: new Block(0, 0, [], 0, "white"),
   board: [[new Block(0, 0, [], 0, "white")]],
-  nextBlocks: [] as number[],
   oldBlocks: [],
   nextBlocksObject: { one: [], two: [], three: [] } as NextBlockObject,
   blockShapes: [new Block(0, 0, [], 0, "white")],
-  setCurrentBlock: (value: Block) => {},
-  randomBlocks: () => {
-    return [0];
-  },
   removeFromQueue: (index: number, propName: PropName) => {},
   setBoard: (value: any) => {},
 };
@@ -51,11 +39,7 @@ type GameContextProps = typeof initState;
 
 export const GameContext = createContext<GameContextProps>(initState);
 
-type GameAction =
-  | { type: "SET_CURRENT_BLOCK"; payload: Block }
-  | { type: "SET_RANDOM_BLOCKS"; payload: number[] }
-  | { type: "REMOVE_BLOCK_FROM_QUEUE"; payload: number }
-  | { type: "SET_BOARD"; payload: Block[][] };
+type GameAction = { type: "SET_BOARD"; payload: Block[][] };
 
 const gameReducer = (
   state: GameContextProps,
@@ -67,22 +51,6 @@ const gameReducer = (
         ...state,
         board: action.payload,
       };
-    case "SET_CURRENT_BLOCK":
-      return {
-        ...state,
-        currentBlock: action.payload,
-      };
-    case "SET_RANDOM_BLOCKS":
-      return {
-        ...state,
-        nextBlocks: action.payload,
-      };
-    case "REMOVE_BLOCK_FROM_QUEUE":
-      return {
-        ...state,
-        nextBlocks: [...state.nextBlocks.toSpliced(action.payload, 1)],
-      };
-
     default:
       return state;
   }
@@ -99,9 +67,8 @@ const GameProvider = ({ children }: any) => {
   const { width: SCREEN_WIDTH } = useWindowDimensions();
   const GAME_WIDTH = SCREEN_WIDTH;
   const NUMBERS_ROWS = 9;
-  const CELL_SIZE = SCREEN_WIDTH / NUMBERS_ROWS;
+  const CELL_SIZE = (SCREEN_WIDTH - 20) / NUMBERS_ROWS;
   const blockShapes = createShapes(CELL_SIZE);
-  const [nextBlocks, setNextBlocks] = useState<number[]>([]);
 
   const [nextBlocksObject, setNextBlocksObject] = useState<NextBlockObject>({
     one: [],
@@ -143,35 +110,32 @@ const GameProvider = ({ children }: any) => {
   }, []);
 
   useEffect(() => {
-    // check row/col filled
-    const newBoard = [...state.board];
-    let emptyBlockValue = 0;
-    for (let colIndex = 0; colIndex < newBoard.length; colIndex++) {
-      const colItems = newBoard[colIndex];
-      const rowItems = [];
-      for (let rowIndex = 0; rowIndex < newBoard[colIndex].length; rowIndex++) {
-        const rowItem = newBoard[rowIndex][colIndex];
-        rowItems.push(rowItem);
-      }
-      const isColFilled = colItems.every((block) => block.value);
-      const isRowFilled = rowItems.every((block) => block.value);
+    const checkAndUpdateBoard = () => {
+      const newBoard = [...state.board];
+      const emptyBlockValue = 0;
+      const highlightColor = "#4444FF30";
 
-      if (isColFilled) {
-        for (let r = 0; r < colItems.length; r++) {
-          const current = colItems[r];
-          const color = "#4444FF30";
-          current.setColor(color, emptyBlockValue);
+      for (let i = 0; i < newBoard.length; i++) {
+        const colItems = newBoard[i];
+        const rowItems = newBoard.map((row) => row[i]);
+
+        const isColFilled = colItems.every((block) => block.value);
+        const isRowFilled = rowItems.every((block) => block.value);
+
+        if (isColFilled) {
+          colItems.forEach((block) =>
+            block.setColor(highlightColor, emptyBlockValue)
+          );
+        }
+        if (isRowFilled) {
+          rowItems.forEach((block) =>
+            block.setColor(highlightColor, emptyBlockValue)
+          );
         }
       }
-      if (isRowFilled) {
-        for (let r = 0; r < rowItems.length; r++) {
-          const current = rowItems[r];
-          const color = "#4444FF30";
-          current.setColor(color, emptyBlockValue);
-        }
-      }
-    }
-    // setBoard(newBoard);
+    };
+
+    checkAndUpdateBoard();
   }, [state.board]);
 
   useEffect(() => {
@@ -182,13 +146,6 @@ const GameProvider = ({ children }: any) => {
       addRandomBlocks(1);
     }
   }, [nextBlocksObject]);
-
-  const randomBlocks = useCallback(() => {
-    const newBlocks = Array.from({ length: 3 }, () =>
-      Math.floor(Math.random() * BLOCKS.length)
-    );
-    return newBlocks;
-  }, []);
 
   const initBoard = () => {
     const _board = createEmptyBoard(NUMBERS_ROWS);
@@ -213,21 +170,14 @@ const GameProvider = ({ children }: any) => {
     dispatch({ type: "SET_BOARD", payload: value });
   };
 
-  const setCurrentBlock = (value: Block) => {
-    dispatch({ type: "SET_CURRENT_BLOCK", payload: value });
-  };
-
   const contextState = {
     ...state,
     boardWidth: GAME_WIDTH,
     cellSize: CELL_SIZE,
     rowNumber: NUMBERS_ROWS,
-    setCurrentBlock,
-    randomBlocks,
     setBoard,
     blockShapes,
     initBoard,
-    nextBlocks,
     nextBlocksObject,
     removeFromQueue,
     addRandomBlocks,

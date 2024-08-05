@@ -5,6 +5,7 @@ import Constants from "expo-constants";
 import { StatusBar } from "expo-status-bar";
 import GameProvider from "@/contexts/GameProvider";
 import GradientBackground from "@/components/GradientBackground";
+import { ScoreProvider } from "@/contexts/ScoreProvider";
 
 const StatusBarBackground = ({ children }: any) => {
   const styling = {
@@ -19,9 +20,11 @@ export default function HomeLayout() {
   return (
     <StatusBarBackground>
       <GameProvider>
-        <GradientBackground>
-          <Slot />
-        </GradientBackground>
+        <ScoreProvider>
+          <GradientBackground>
+            <Slot />
+          </GradientBackground>
+        </ScoreProvider>
       </GameProvider>
     </StatusBarBackground>
   );

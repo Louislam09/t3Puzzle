@@ -8,26 +8,12 @@ import { useGameContext } from "@/contexts/GameProvider";
 import React, { useCallback, useEffect, useState } from "react";
 import { StyleSheet, View } from "react-native";
 import Colors from "@/constants/Colors";
+import { useScore } from "@/contexts/ScoreProvider";
 
 export default function Game() {
-  const [score, setScore] = useState<number>(0);
-  const [highScore, setHighScore] = useState<number>(0);
-  const {
-    cellSize,
-    nextBlocks,
-    removeFromQueue,
-    board,
-    setBoard,
-    blockShapes,
-  } = useGameContext();
-  // const [placedBlocks, setPlacedBlocks] = useState<{ [key: string]: number }>(
-  //   {}
-  // );
-  useEffect(() => {
-    if (score == 3) {
-      // randomBlocks();
-    }
-  }, [score]);
+  const { cellSize, removeFromQueue, board, setBoard } = useGameContext();
+
+  const scorer = useScore();
 
   const handleDragStart = (blockType: number) => {
     // setCurrentBlock?.(blockType);
@@ -74,6 +60,7 @@ export default function Game() {
           const boardCol = col + blockCol;
           const current = newBoard[boardCol][boardRow];
           current.setColor(color);
+          scorer.placeBlock();
         }
       }
     }
@@ -90,7 +77,6 @@ export default function Game() {
     if (canMove) {
       const newBoard = placeBlock(blockShape, row, col);
       setBoard(newBoard);
-      setScore((sc) => sc + 1);
       removeFromQueue(blockIndex, blockShape.queue);
     } else {
       console.log("Block cannot be placed at the given position");
@@ -100,25 +86,15 @@ export default function Game() {
 
   return (
     <View style={styles.container}>
-      <ScoreDisplay
-        nextBlocks={nextBlocks}
-        score={score}
-        highScore={highScore}
-      />
+      <ScoreDisplay />
       <View style={styles.gameArea}>
         <GameBoard
           {...{
-            nextBlocks,
             onDragStart: handleDragStart,
             onDrop: handleBlockDrop,
           }}
         />
-        <Text>Remain Block</Text>
-        <BlockQueue
-          nextBlocks={nextBlocks}
-          onDragStart={handleDragStart}
-          onDrop={handleBlockDrop}
-        />
+        <BlockQueue onDragStart={handleDragStart} onDrop={handleBlockDrop} />
       </View>
     </View>
   );

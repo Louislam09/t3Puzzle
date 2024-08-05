@@ -1,18 +1,15 @@
-import React from "react";
+import React, { useMemo } from "react";
 import { StyleSheet, View } from "react-native";
 import { Text } from "./Themed";
+import { useGameContext } from "@/contexts/GameProvider";
+import { useScore } from "@/contexts/ScoreProvider";
 
-interface ScoreDisplayProps {
-  score: number;
-  highScore: number;
-  nextBlocks: any[];
-}
+interface ScoreDisplayProps {}
 
-const ScoreDisplay: React.FC<ScoreDisplayProps> = ({
-  score,
-  highScore,
-  nextBlocks,
-}) => {
+const ScoreDisplay: React.FC<ScoreDisplayProps> = ({}) => {
+  const scorer = useScore();
+  const score = scorer.score;
+
   return (
     <View style={styles.container}>
       <View style={styles.score}>

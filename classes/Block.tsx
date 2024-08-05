@@ -54,8 +54,8 @@ class Block {
 
   private createBlock(): JSX.Element {
     const style: ViewStyle = {
-      borderWidth: 1,
-      borderColor: "#ffffff59",
+      // borderWidth: 1,
+      borderColor: "#ffffff99",
       alignItems: "center",
       justifyContent: "center",
       backgroundColor: this.color,

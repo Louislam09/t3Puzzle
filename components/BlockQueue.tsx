@@ -5,7 +5,6 @@ import { PropName, useGameContext } from "@/contexts/GameProvider";
 import Block from "@/classes/Block";
 
 interface BlockQueueProps {
-  nextBlocks: number[];
   onDragStart: (blockType: number) => void;
   onDrop: any;
 }
@@ -62,9 +61,7 @@ const BlockQueue: React.FC<BlockQueueProps> = ({ onDragStart, onDrop }) => {
         <View style={{}} />
       )}
       {queueBlocksTwo[0] ? (
-        <View style={[styles.cell, { marginHorizontal: cellSize }]}>
-          {queueBlocksTwo[0].getElement()}
-        </View>
+        <View style={[styles.cell]}>{queueBlocksTwo[0].getElement()}</View>
       ) : (
         <View style={{}} />
       )}
@@ -81,8 +78,8 @@ const styles = StyleSheet.create({
   row: {
     width: "100%",
     flexDirection: "row",
-    justifyContent: "center",
     alignItems: "center",
+    justifyContent: "center",
   },
   cell: {
     backgroundColor: "transparent",

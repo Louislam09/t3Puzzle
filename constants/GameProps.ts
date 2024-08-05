@@ -45,23 +45,9 @@ export const generateNextBlocks = (): number[] => {
 };
 
 export const getColor = (value: number): string => {
-  // const colors = [
-  //   "#2C3E50", // Deep blue-grey
-  //   "#E74C3C", // Bright red
-  //   "#3498DB", // Sky blue
-  //   "#F1C40F", // Sunflower yellow
-  //   "#1ABC9C", // Turquoise
-  //   "#9B59B6", // Amethyst purple
-  //   "#27AE60", // Nephritis green
-  //   "#F39C12", // Orange
-  //   "#16A085", // Green sea
-  //   "#D35400", // Pumpkin orange
-  //   "#34495E", // Wet asphalt blue
-  //   "#2ECC71", // Emerald green
-  // ];
   const colors = [
     "#FF5733", // Fiery Red
-    "#33FF57", // Bright Green
+    "#16A085", // Bright Green
     "#3357FF", // Vivid Blue
     "#FF33A8", // Hot Pink
     "#FFD700", // Golden Yellow

@@ -5,17 +5,9 @@ import { StyleSheet, View } from "react-native";
 import BlockQueue from "./BlockQueue";
 import Colors from "@/constants/Colors";
 
-interface GameBoardProps {
-  nextBlocks: number[];
-  onDragStart: any;
-  onDrop: any;
-}
+interface GameBoardProps {}
 
-const GameBoard: React.FC<GameBoardProps> = ({
-  nextBlocks,
-  onDragStart,
-  onDrop,
-}) => {
+const GameBoard: React.FC<GameBoardProps> = ({}) => {
   const boardRef = useRef<View>(null);
   const { boardWidth } = useGameContext();
   const { board } = useGameContext();
@@ -25,7 +17,12 @@ const GameBoard: React.FC<GameBoardProps> = ({
       {board?.map((row, rowIndex) => (
         <View key={rowIndex}>
           {row.map((cell, cellIndex) => (
-            <View key={cellIndex}>{cell?.getElement()}</View>
+            <View
+              style={{ borderWidth: 1, borderColor: "#ffffff59" }}
+              key={cellIndex}
+            >
+              {cell?.getElement()}
+            </View>
           ))}
         </View>
       ))}
@@ -38,7 +35,7 @@ const styles = StyleSheet.create({
     display: "flex",
     flexDirection: "row",
     backgroundColor: "#ffffff59",
-    borderWidth: 2,
+    borderWidth: 1,
     borderColor: "#6295e669",
   },
 });
