@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "t3Puzzle",
-    "slug": "t3Puzzle",
+    "slug": "t3-puzzle",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
@@ -16,10 +16,12 @@
       "supportsTablet": true
     },
     "android": {
+      "versionCode": 1,
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.louislam09.t3Puzzle"
     },
     "web": {
       "bundler": "metro",
@@ -31,6 +33,15 @@
     ],
     "experiments": {
       "typedRoutes": true
-    }
+    },
+    "extra": {
+      "router": {
+        "origin": false
+      },
+      "eas": {
+        "projectId": "bc9d9a29-4705-4160-8068-1a8f15d9050c"
+      }
+    },
+    "owner": "louislam09"
   }
 }
