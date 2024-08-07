@@ -16,7 +16,8 @@ const DraggableBlock: React.FC<DraggableBlockProps> = ({
   onDrop,
   blockIndex,
 }) => {
-  const defaultScale = 0.6;
+  // const defaultScale = 0.6;
+  const defaultScale = 2;
   const pan: any = useRef(new Animated.ValueXY()).current;
   const scale = useRef(new Animated.Value(0)).current;
   const opacity = useRef(new Animated.Value(0)).current;
@@ -110,14 +111,30 @@ const DraggableBlock: React.FC<DraggableBlockProps> = ({
             style={[
               styles.cell,
               {
-                backgroundColor: cell ? color : "transparent",
+                backgroundColor: cell ? "#000" : "transparent",
                 borderWidth: cell ? 1 : 0,
                 width: cellSize,
                 height: cellSize,
-                borderColor: "#ffffff99",
+                // borderColor: "#ffffff99",
+                justifyContent: "center",
+                alignItems: "center",
+                // ---
+                shadowColor: color,
+                shadowOffset: { width: 0, height: 0 },
+                shadowOpacity: 1,
+                shadowRadius: 1,
+                elevation: 5,
               },
             ]}
-          />
+          >
+            {/* <View
+              style={{
+                backgroundColor: cell ? "#000" : "transparent",
+                width: cellSize - 5,
+                height: cellSize - 5,
+              }}
+            /> */}
+          </View>
         ))}
       </View>
     ));
@@ -127,6 +144,7 @@ const DraggableBlock: React.FC<DraggableBlockProps> = ({
     <Animated.View
       ref={elementRef}
       style={[
+        styles.blockContainer,
         { opacity },
         {
           transform: [
@@ -138,19 +156,22 @@ const DraggableBlock: React.FC<DraggableBlockProps> = ({
       ]}
       {...panResponder.panHandlers}
     >
-      <View style={styles.blockContainer}>{renderBlockShape()}</View>
+      {renderBlockShape()}
     </Animated.View>
   );
 };
 
 const styles = StyleSheet.create({
   blockContainer: {
-    flexDirection: "column",
+    marginHorizontal: 15,
   },
   row: {
     flexDirection: "row",
   },
-  cell: {},
+  cell: {
+    margin: 1,
+    // backgroundColor: "#ffffff99",
+  },
 });
 
 export default DraggableBlock;

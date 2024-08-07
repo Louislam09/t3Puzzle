@@ -57,7 +57,7 @@ export const getColor = (value: number): string => {
     "#33FFDD", // Aqua
     "#FF3333", // Red
     "#33FF33", // Lime
-    "#FFFFFF", // White
+    "#eed8ac", // White
   ];
 
   return colors[value] || "#FFFFFF"; // Blanco por defecto

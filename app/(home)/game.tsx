@@ -2,25 +2,21 @@ import Block from "@/classes/Block";
 import BlockQueue from "@/components/BlockQueue";
 import GameBoard from "@/components/GameBoard";
 import ScoreDisplay from "@/components/ScoreDisplay";
-import { Text } from "@/components/Themed";
-import { BLOCKS, BlockType, getColor } from "@/constants/GameProps";
 import { useGameContext } from "@/contexts/GameProvider";
-import React, { useCallback, useEffect, useState } from "react";
-import { StyleSheet, View } from "react-native";
-import Colors from "@/constants/Colors";
 import { useScore } from "@/contexts/ScoreProvider";
+import React, { useRef } from "react";
+import { StyleSheet, View } from "react-native";
 
 export default function Game() {
   const { cellSize, removeFromQueue, board, setBoard } = useGameContext();
 
   const scorer = useScore();
+  const gameAreaYRef = useRef<number>(0);
 
-  const handleDragStart = (blockType: number) => {
-    // setCurrentBlock?.(blockType);
-  };
+  const handleDragStart = (blockType: number) => {};
 
   const getBoardPosition = (x: number, y: number) => {
-    const initY = 178;
+    const initY = gameAreaYRef.current;
     const col = Math.round(Math.abs(x) / cellSize);
     const row = Math.floor((y - initY) / cellSize);
     return { col, row };
@@ -67,38 +63,6 @@ export default function Game() {
     return newBoard;
   };
 
-  // const checkAndUpdateBoard = () => {
-  //   const newBoard = [...board];
-  //   const emptyBlockValue = 0;
-  //   const highlightColor = "#4444FF30";
-  //   let lineCompleted = false;
-
-  //   for (let i = 0; i < newBoard.length; i++) {
-  //     const colItems = newBoard[i];
-  //     const rowItems = newBoard.map((row) => row[i]);
-  //     const isColFilled = colItems.every((block) => block.value);
-  //     const isRowFilled = rowItems.every((block) => block.value);
-  //     lineCompleted = isRowFilled || isColFilled;
-
-  //     if (isColFilled) {
-  //       scorer.completeLine();
-  //       colItems.forEach((block) =>
-  //         block.setColor(highlightColor, emptyBlockValue)
-  //       );
-  //     }
-  //     if (isRowFilled) {
-  //       scorer.completeLine();
-  //       rowItems.forEach((block) =>
-  //         block.setColor(highlightColor, emptyBlockValue)
-  //       );
-  //     }
-  //   }
-
-  //   if (!lineCompleted) {
-  //     scorer.resetCombo();
-  //   }
-  // };
-
   const handleBlockDrop = (
     blockShape: Block,
     position: { x: number; y: number },
@@ -110,7 +74,6 @@ export default function Game() {
       const newBoard = placeBlock(blockShape, row, col);
       setBoard(newBoard);
       removeFromQueue(blockIndex, blockShape.queue);
-      // checkAndUpdateBoard();
     } else {
       console.log("Block cannot be placed at the given position");
     }
@@ -120,7 +83,13 @@ export default function Game() {
   return (
     <View style={styles.container}>
       <ScoreDisplay />
-      <View style={styles.gameArea}>
+      <View
+        style={styles.gameArea}
+        onLayout={(env) => {
+          const pos = env.nativeEvent?.layout;
+          gameAreaYRef.current = pos.y;
+        }}
+      >
         <GameBoard
           {...{
             onDragStart: handleDragStart,
@@ -139,6 +108,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     width: "100%",
+    backgroundColor: "#000",
   },
   gameArea: {
     width: "100%",

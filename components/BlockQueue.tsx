@@ -3,6 +3,7 @@ import { View, StyleSheet } from "react-native";
 import DraggableBlock from "./DraggableBlock";
 import { PropName, useGameContext } from "@/contexts/GameProvider";
 import Block from "@/classes/Block";
+import { LinearGradient } from "expo-linear-gradient";
 
 interface BlockQueueProps {
   onDragStart: (blockType: number) => void;
@@ -81,9 +82,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
   },
-  cell: {
-    backgroundColor: "transparent",
-  },
+  cell: {},
 });
 
 export default BlockQueue;

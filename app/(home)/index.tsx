@@ -10,17 +10,30 @@ export default function Home() {
   const { resetGame } = useScore();
 
   return (
-    <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
-      <Text>Home Screen</Text>
+    <View
+      style={{
+        flex: 1,
+        alignItems: "center",
+        justifyContent: "center",
+        backgroundColor: "transparent",
+      }}
+    >
+      {/* <Text style={{ fontSize: 24 }}>Home Screen</Text> */}
       <TouchableOpacity
         onPress={() => {
           resetGame();
           initBoard();
-          router.push("/game");
+          router.push("/Game");
         }}
-        style={{ backgroundColor: "red", padding: 10, marginVertical: 10 }}
+        style={{
+          backgroundColor: "red",
+          padding: 10,
+          marginVertical: 10,
+          borderRadius: 5,
+          paddingHorizontal: 15,
+        }}
       >
-        <Text style={{ fontSize: 20 }}>Start</Text>
+        <Text style={{ fontSize: 24, textTransform: "uppercase" }}>Start</Text>
       </TouchableOpacity>
       {/* <Redirect href={"/game"} /> */}
     </View>

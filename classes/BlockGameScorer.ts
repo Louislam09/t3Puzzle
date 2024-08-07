@@ -8,7 +8,6 @@ class BlockGameScorer {
   }
 
   resetCombo(): void {
-    console.log("combo to 0");
     this.combo = 0;
   }
 

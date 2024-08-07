@@ -34,9 +34,10 @@ const styles = StyleSheet.create({
   blockContainer: {
     display: "flex",
     flexDirection: "row",
-    backgroundColor: "#ffffff59",
+    backgroundColor: "#100f5599",
+    // backgroundColor: "#ffffff59",
     borderWidth: 1,
-    borderColor: "#6295e669",
+    borderColor: "#6295e699",
   },
 });
 

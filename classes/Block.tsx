@@ -1,7 +1,6 @@
 import { BLOCKS, BlockType } from "@/constants/GameProps";
 import { View, ViewStyle } from "react-native";
 import React from "react";
-import { Text } from "@/components/Themed";
 
 enum PropName {
   one = "one",
@@ -63,9 +62,7 @@ class Block {
       height: this.blockSize,
     };
 
-    return (
-      <View style={style}>{/* <Text>{`${this.x}-${this.y}`}</Text> */}</View>
-    );
+    return <View style={style} />;
   }
 
   setElement(blockType: any, element: any) {
